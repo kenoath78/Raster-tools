@@ -12,14 +12,12 @@ def check_raster(raster):
         raise Exception('Unable to read the data file or incorrect file type: \'' + raster +'\'')
     else:
         print("Valid raster: {0}".format(raster))
-    # Check for valid projection
+    # Check projection validity
     Projection  = osr.SpatialReference()
     Projection.ImportFromWkt(ds.GetProjectionRef())
     Projcs = Projection.GetAttrValue('PROJCS', 0)
     Projcs_unit = Projection.GetAttrValue('UNIT', 0)
     epsg = int(Projection.GetAttrValue('AUTHORITY', 1))
-    bands = ds.RasterCount
-    ds = None
     if Projcs == None:
         if epsg == None:
             print("File name: {0}\nInvalid Projection and EPSG")
@@ -27,4 +25,7 @@ def check_raster(raster):
             print("Invalid Projection\nEPSG: {0}".format(epsg))
     else:
         print("Projection: {0}\nProjection units: {1}\nEPSG: {2}".format(Projcs, Projcs_unit, epsg))
+    # Check number of bands
+    bands= ds.RasterCount
     print("Number of bands: {0}\n".format(bands))
+    ds=None
