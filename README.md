@@ -1,3 +1,3 @@
 # Raster-tools
 
-Tools for viewing and manipulating rasters
+A package of scripts for viewing and manipulating rasters.
