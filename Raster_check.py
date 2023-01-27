@@ -29,3 +29,17 @@ def check_raster(raster):
     bands= ds.RasterCount
     print("Number of bands: {0}\n".format(bands))
     ds=None
+
+def compile_df_fields(df,csv_dictionary):
+    csv_dict=pd.read_csv(csv_dictionary)
+    dict_df=dict(zip(csv_dict.FIELDNAME, csv_dict[csv_dict.columns[1:]].values.tolist()))
+    for fieldname_,fieldlist in zip(list(dict_df.keys()),list(dict_df.values())):
+        fieldlist=[field for field in fieldlist if str(field)!='nan']
+        fieldname_=str('c'+fieldname_)
+        df[fieldname_]=pd.NA
+        for field in fieldlist:
+            df.loc[df[fieldname_].isna(), fieldname_]=df[field]
+    column_list=[col for col in df.columns.values.tolist() if str(col).startswith('c')]
+    df=df[column_list]
+    df=df.rename(columns=lambda column: column.lstrip('c'))
+    return df
